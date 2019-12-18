@@ -7,9 +7,7 @@ import base64
 import mysql.connector
 app = Flask(__name__)
 
-# image1 ="image1.jpg"
-# base = base64.encodestring(open(image1,"rb").read())
-# print(base)
+
 app.secret_key = 'mykey'
 
 mydb = mysql.connector.connect(
@@ -21,7 +19,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 
-
+# -------------------Login Authentication Decorator
 def login_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
@@ -32,10 +30,13 @@ def login_required(test):
             return redirect(url_for('login'))
     return wrap
         
+#------------------------Login GET ROUTE
 
 @app.route('/' , methods=['GET'])
 def login():
     return render_template('login.html')
+
+#------------------------Login POST ROUTE
 
 @app.route('/auth-account', methods=['POST'])
 def authaccount():
@@ -58,90 +59,130 @@ def authaccount():
                 return redirect(url_for('index'))
             else:
                 return redirect(url_for('login'))
-    except:
-        print("Exception found")
+    except Exception as e:
+        print("Exception found from authauthentication:" + str(e))
+        
 
-    
+#------------------------Index Route = Show all data   
 @app.route('/index', methods = ["GET"])
 @login_required
 def index():
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM User")
-    myresult = mycursor.fetchall()
-    # mycursor.close()
+    try:    
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT * FROM User")
+        myresult = mycursor.fetchall()
+        # mycursor.close()
 
 
-    return render_template('index.html', User=myresult )
+        return render_template('index.html', User=myresult )
+    
+    except Exception as e:
+        print("Exception found from index:" + str(e))
 
 
+#------------------------Create Route 
 
 @app.route('/create', methods = ["GET","POST"])
 @login_required
 def create():
+    try:
+        if request.method == "POST":    
+            data = request.form
+            userName = data['name']
+            fpassword = data['password']
+            password = sha256_crypt.hash(fpassword)
+            mobile = data['mobile']
+            email = data['email']
+            userStatus = data['status']
+            userType = data['type']
+            mycursor = mydb.cursor()
+            mycursor.execute("INSERT INTO User (UserName, Passwrd, Email, Mobile, UserStatus, UserType) VALUES (%s, %s, %s, %s, %s, %s)", (userName, password, email, mobile, userStatus, userType )) 
+            mydb.commit()
+            return redirect(url_for('index'))
+        else:
+            return render_template('create.html')
 
-    if request.method == "POST":    
-        data = request.form
-        userName = data['name']
-        fpassword = data['password']
-        password = sha256_crypt.hash(fpassword)
-        mobile = data['mobile']
-        email = data['email']
-        userStatus = data['status']
-        userType = data['type']
-        mycursor = mydb.cursor()
-        mycursor.execute("INSERT INTO User (UserName, Passwrd, Email, Mobile, UserStatus, UserType) VALUES (%s, %s, %s, %s, %s, %s)", (userName, password, email, mobile, userStatus, userType )) 
-        mydb.commit()
-        return redirect(url_for('index'))
-    else:
-        return render_template('create.html')
+    except Exception as e:
+        print("Exception found from create:" + str(e))
 
+
+#------------------------Edit Route
 
 @app.route('/edit/<int:id_data>', methods=['POST', 'GET'])
 @login_required
 def edit(id_data):
-             mycursor = mydb.cursor()
-             mycursor.execute('SELECT *  FROM User where ID= '  +str(id_data)) 
-             result = mycursor.fetchall()
-             return render_template('edit.html', updata = result)
+    try:
+         mycursor = mydb.cursor()
+         mycursor.execute('SELECT *  FROM User where ID= '  +str(id_data)) 
+         result = mycursor.fetchall()
+         return render_template('edit.html', updata = result)
+     
+    except Exception as e:
+        print("Exception found from edit" + str(e))     
+        
+        
+#------------------------Update Route
             
 @app.route('/update', methods=["POST"])
 @login_required
 def update():
-    if request.method == 'POST':
-        data = request.form
-        id = data['id']
-        userName = data['uname']
-        upassword = data['password']
-        password = sha256_crypt.hash(upassword)
-        mobile = data['mobile']
-        email = data['email']
-        userStatus = data['status']
-        userType = data['type'] 
-        mycursor = mydb.cursor()
-        mycursor.execute("""
-               UPDATE User
-               SET UserName=%s, Passwrd=%s, Email=%s, Mobile=%s, UserStatus=%s, UserType=%s
-               WHERE ID=%s
-            """, (userName, password, email, mobile, userStatus, userType, id)) 
-        mydb.commit()
-    return redirect(url_for('index'))
+    try:
+        if request.method == 'POST':
+            data = request.form
+            id = data['id']
+            userName = data['uname']
+            upassword = data['password']
+            password = sha256_crypt.hash(upassword)
+            mobile = data['mobile']
+            email = data['email']
+            userStatus = data['status']
+            userType = data['type'] 
+            mycursor = mydb.cursor()
+            mycursor.execute("""
+                UPDATE User
+                SET UserName=%s, Passwrd=%s, Email=%s, Mobile=%s, UserStatus=%s, UserType=%s
+                WHERE ID=%s
+                """, (userName, password, email, mobile, userStatus, userType, id)) 
+            mydb.commit()
+        return redirect(url_for('index'))
+    
+    except Exception as e:
+        print("Exception found from update" + str(e))
+        
+        
+        
+#------------------------Delete ROUTE
 
 @app.route('/delete/<int:id_data>' , methods=['GET'])
 @login_required
 def delete(id_data):
-    mycursor = mydb.cursor()
-    mycursor.execute('DELETE FROM User where ID= '  +str(id_data))
-    mydb.commit()
-    return redirect(url_for('index'))
-
+    try:
+        mycursor = mydb.cursor()
+        mycursor.execute('DELETE FROM User where ID= '  +str(id_data))
+        mydb.commit()
+        return redirect(url_for('index'))
+    
+    except Exception as e:
+        print("Exception found from delete" + str(e))
+        
+        
+        
+#------------------------Logout ROUTE      
+        
 @app.route('/logout')
 @login_required
 def logout():
-    session.clear()
-    flash("you have to login")
-    gc.collect()
-    return redirect(url_for('login'))
+    try:
+        session.clear()
+        flash("you have to login")
+        gc.collect()
+        return redirect(url_for('login'))
 
+    except Exception as e:
+        print("Exception found from logout" + str(e))
+        
+        
+        
 
 if __name__ == '__main__':
     app.run(debug=True)

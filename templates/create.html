@@ -13,26 +13,26 @@
 
 <form action="" method="POST" >
     Username:<br>
-    <input type="text" name="name" >
+    <input type="text" name="name" required>
     <br>
      Password:<br>
-    <input type="password" name="password" >
+    <input type="password" name="password" required>
     <br>
      Email:<br>
-    <input type="email" name="email" >
+    <input type="email" name="email" required>
     <br>
     Mobile:<br>
-    <input type="text" name="mobile" >
+    <input type="text" name="mobile" required>
     <br>
     UserType: <br> 
-    <select type="text" name="type">
+    <select type="text" name="type" required>
     <option value="" disabled>UserType</option>
     <option value="normal">Normal</option>
     <option value="admin">Admin</option>
     </select>
     <br>
     UserStatus: <br>
-    <select type="text" name="status">
+    <select type="text" name="status" required>
         <option value="" disabled>UserStatus</option>
         <option value="active">Active</option>
         <option value="inactive">inactive</option>

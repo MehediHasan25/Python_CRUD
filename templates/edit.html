@@ -23,26 +23,26 @@
         <input type="hidden" name="id" value={{row.0}}>
         <br>
     Username:<br>
-    <input type="text" name="uname" value={{row.1}}>
+    <input type="text" name="uname" value={{row.1}} required>
     <br>
      Password:<br>
-    <input type="password" name="password" value={{row.2}}>
+    <input type="password" name="password" value={{row.2}} required>
     <br>
      Email:<br>
-    <input type="email" name="email" value={{row.3}} >
+    <input type="email" name="email" value={{row.3}} required>
     <br>
     Mobile:<br>
-    <input type="text" name="mobile" value={{row.4}} >
+    <input type="text" name="mobile" value={{row.4}} required>
     <br>
     UserType: <br> 
-    <select type="text" name="type" value={{row.5}}>
+    <select type="text" name="type" value={{row.5}} required>
     <option value="" disabled>UserType</option>
     <option value="normal">Normal</option>
     <option value="admin">Admin</option>
     </select>
     <br>
     UserStatus: <br>
-    <select type="text" name="status" value={{row.6}}>
+    <select type="text" name="status" value={{row.6}} required>
         <option value="" disabled>UserStatus</option>
         <option value="active">Active</option>
         <option value="inactive">inactive</option>
