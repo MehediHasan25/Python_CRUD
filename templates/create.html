@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head%}
+ <title> Create User</title>
+{% endblock %}
+
+
+{% block body %}
+
+<a href="{{url_for('logout')}}">Logout</a>
+
+<h1>Create User</h1>
+
+<form action="" method="POST" >
+    Username:<br>
+    <input type="text" name="name" >
+    <br>
+     Password:<br>
+    <input type="password" name="password" >
+    <br>
+     Email:<br>
+    <input type="email" name="email" >
+    <br>
+    Mobile:<br>
+    <input type="text" name="mobile" >
+    <br>
+    UserType: <br> 
+    <select type="text" name="type">
+    <option value="" disabled>UserType</option>
+    <option value="normal">Normal</option>
+    <option value="admin">Admin</option>
+    </select>
+    <br>
+    UserStatus: <br>
+    <select type="text" name="status">
+        <option value="" disabled>UserStatus</option>
+        <option value="active">Active</option>
+        <option value="inactive">inactive</option>
+        <option value="archive">Archive</option>
+        </select>
+    <br>
+    <br>
+    <input type="submit" value="Submit" >
+  </form> 
+
+
+
+{% endblock %} 

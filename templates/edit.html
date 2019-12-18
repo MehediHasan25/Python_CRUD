@@ -1,0 +1,60 @@
+{% extends 'base.html'%}
+
+{% block head%}
+ <title> Update </title>
+
+{% endblock%}
+
+
+{% block body %}
+<a href="{{url_for('logout')}}">Logout</a>
+
+<h1>Update User</h1>
+
+{% for row in updata%}
+ <!-- <tr>
+     <td>{{row.0}}</td>
+     <td>{{row.1}}</td>
+     <td>{{row.2}}</td>
+     <td>{{row.3}}</td>
+ </tr> -->
+<form action="{{url_for('update')}}" method="POST" >
+        <br>
+        <input type="hidden" name="id" value={{row.0}}>
+        <br>
+    Username:<br>
+    <input type="text" name="uname" value={{row.1}}>
+    <br>
+     Password:<br>
+    <input type="password" name="password" value={{row.2}}>
+    <br>
+     Email:<br>
+    <input type="email" name="email" value={{row.3}} >
+    <br>
+    Mobile:<br>
+    <input type="text" name="mobile" value={{row.4}} >
+    <br>
+    UserType: <br> 
+    <select type="text" name="type" value={{row.5}}>
+    <option value="" disabled>UserType</option>
+    <option value="normal">Normal</option>
+    <option value="admin">Admin</option>
+    </select>
+    <br>
+    UserStatus: <br>
+    <select type="text" name="status" value={{row.6}}>
+        <option value="" disabled>UserStatus</option>
+        <option value="active">Active</option>
+        <option value="inactive">inactive</option>
+        <option value="archive">Archive</option>
+        </select>
+    <br>
+    <br>
+    <input type="submit" value="Submit" >
+  </form> 
+
+  {% endfor %}
+
+
+{% endblock %}
+

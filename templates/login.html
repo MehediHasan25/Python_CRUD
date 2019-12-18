@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block header %}
+<title>login</title>  
+
+{% endblock %}
+
+
+{% block body %}
+
+    <form action="{{url_for('authaccount')}}" method="POST" >
+        Username:<br>
+        <input type="text" name="name" >
+        <br>
+         Password:<br>
+        <input type="password" name="password" >
+        <br>
+        <input type="submit" value="Submit" >
+    </form>  
+
+{% endblock %}
